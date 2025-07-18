@@ -1,0 +1,30 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Tambahkan gaya dasar untuk dark mode */
+body {
+  @apply font-sans bg-gray-100 text-text-dark; /* Default light mode */
+}
+
+.dark body {
+  @apply bg-dark-blue-bg text-text-light; /* Dark mode background and text */
+}
+
+/* Scrollbar styling for a smoother look in dark mode (optional) */
+.dark ::-webkit-scrollbar {
+  width: 10px;
+}
+
+.dark ::-webkit-scrollbar-track {
+  background: #1B2E4A; /* mid-blue-bg */
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: #4A90E2; /* light-blue */
+  border-radius: 5px;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #007BFF; /* primary-blue */
+}
