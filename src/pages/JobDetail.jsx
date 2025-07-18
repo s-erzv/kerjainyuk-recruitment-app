@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
-import { useTheme } from '../contexts/ThemeContext'; // Import useTheme
-import { MdLightMode, MdDarkMode, MdArrowBack } from 'react-icons/md'; // Import icons
+import { useTheme } from '../contexts/ThemeContext';
+import { MdLightMode, MdDarkMode, MdArrowBack } from 'react-icons/md';
 
 function JobDetail() {
   const { id } = useParams();
@@ -16,10 +16,13 @@ function JobDetail() {
   const [applicantEmail, setApplicantEmail] = useState('');
   const [cvFile, setCvFile] = useState(null);
   const [uploading, setUploading] = useState(false);
-  const [applicationSuccess, setApplicationSuccess] = useState(false);
   const [applicationError, setApplicationError] = useState(null);
 
-  const { theme, toggleTheme } = useTheme(); // Get theme and toggleTheme from context
+  // === State baru untuk Modal Konfirmasi ===
+  const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+  const [submittedCompanyName, setSubmittedCompanyName] = useState('');
+
+  const { theme, toggleTheme } = useTheme();
 
   useEffect(() => {
     const fetchJob = async () => {
@@ -53,7 +56,7 @@ function JobDetail() {
     e.preventDefault();
     setUploading(true);
     setApplicationError(null);
-    setApplicationSuccess(false);
+    setShowConfirmationModal(false); // Pastikan modal tertutup sebelum submit baru
 
     if (!cvFile) {
       setApplicationError('Mohon unggah file CV Anda.');
@@ -63,10 +66,12 @@ function JobDetail() {
 
     try {
       const fileExt = cvFile.name.split('.').pop();
-      const fileName = `${Date.now()}-${job.id}-${applicantName.replace(/\s+/g, '-')}.${fileExt}`;
+      // Menggunakan nama file yang lebih unik dengan UUID atau timestamp
+      const fileId = crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
+      const fileName = `${fileId}-${applicantName.replace(/\s+/g, '-')}.${fileExt}`;
       const filePath = `public/${fileName}`;
 
-      const { error: uploadError, data: uploadData } = await supabase.storage
+      const { error: uploadError } = await supabase.storage
         .from('cv-uploads')
         .upload(filePath, cvFile, {
           cacheControl: '3600',
@@ -77,7 +82,13 @@ function JobDetail() {
         throw uploadError;
       }
 
-      const cvUrl = supabase.storage.from('cv-uploads').getPublicUrl(filePath).data.publicUrl;
+      const { data: { publicUrl: cvUrl }, error: getUrlError } = supabase.storage
+        .from('cv-uploads')
+        .getPublicUrl(filePath);
+
+      if (getUrlError) {
+        throw getUrlError;
+      }
 
       const { error: insertError } = await supabase
         .from('applications')
@@ -92,11 +103,17 @@ function JobDetail() {
         throw insertError;
       }
 
-      setApplicationSuccess(true);
+      // === Tampilkan Modal Konfirmasi Setelah Berhasil ===
+      setSubmittedCompanyName(job.company);
+      setShowConfirmationModal(true);
+      
+      // Reset form fields
       setApplicantName('');
       setApplicantEmail('');
       setCvFile(null);
-      setTimeout(() => navigate('/jobs'), 3000); // Redirect ke halaman daftar lowongan
+      // Hapus redirect otomatis di sini
+      // setTimeout(() => navigate('/jobs'), 5000); 
+
     } catch (err) {
       console.error('Error submitting application:', err.message);
       setApplicationError(`Gagal mengirim lamaran: ${err.message}`);
@@ -104,6 +121,12 @@ function JobDetail() {
       setUploading(false);
     }
   };
+
+  const handleCloseConfirmationModal = () => {
+    setShowConfirmationModal(false);
+    navigate('/jobs'); // Arahkan kembali ke daftar lowongan setelah menutup modal
+  };
+
 
   if (loadingJob) {
     return <div className={`text-center p-8 ${theme === 'dark' ? 'text-text-light' : 'text-gray-700'}`}>Memuat detail lowongan...</div>;
@@ -119,10 +142,9 @@ function JobDetail() {
 
   return (
     <div className={`container mx-auto p-4 max-w-4xl animate-fade-in ${theme === 'dark' ? 'bg-dark-blue-bg' : 'bg-gray-100'}`}>
-      {/* Header dengan tombol back dan tombol tema */}
       <div className="flex justify-between items-center mb-6">
         <button
-          onClick={() => navigate('/jobs')} // Tombol kembali ke daftar lowongan
+          onClick={() => navigate('/jobs')}
           className={`p-2 rounded-full transition-colors duration-300 ${
             theme === 'dark'
               ? 'bg-mid-blue-bg text-text-light hover:bg-light-blue hover:text-white'
@@ -164,12 +186,7 @@ function JobDetail() {
           : 'bg-white border-gray-200'
       }`}>
         <h2 className={`text-xl sm:text-2xl font-semibold mb-4 ${theme === 'dark' ? 'text-text-light' : 'text-gray-800'}`}>Ajukan Lamaran Anda</h2>
-        {applicationSuccess && (
-          <div className="bg-accent-teal/20 border border-accent-teal text-text-light px-4 py-3 rounded relative mb-4 animate-fade-in" role="alert">
-            <strong className="font-bold">Berhasil!</strong>
-            <span className="block sm:inline"> Lamaran Anda telah terkirim. Anda akan dialihkan...</span>
-          </div>
-        )}
+        {/* Pesan sukses/error kini dihandle oleh modal atau tetap di sini jika error */}
         {applicationError && (
           <div className="bg-red-500/20 border border-red-500 text-red-300 px-4 py-3 rounded relative mb-4 animate-fade-in" role="alert">
             <strong className="font-bold">Error!</strong>
@@ -249,6 +266,34 @@ function JobDetail() {
           </button>
         </form>
       </div>
+
+      {/* Confirmation Modal */}
+      {showConfirmationModal && (
+        <div className="fixed inset-0 bg-dark-blue-bg bg-opacity-80 flex items-center justify-center p-4 z-50 animate-fade-in">
+          <div className={`rounded-lg shadow-xl p-8 w-full max-w-sm md:max-w-md border animate-zoom-in ${
+            theme === 'dark'
+              ? 'bg-mid-blue-bg border-light-blue'
+              : 'bg-white border-gray-200'
+          }`}>
+            <h2 className={`text-xl sm:text-2xl font-bold text-center mb-4 ${theme === 'dark' ? 'text-primary-blue' : 'text-indigo-700'}`}>
+              Lamaran Berhasil Dikirim!
+            </h2>
+            <p className={`text-base sm:text-lg text-center mb-6 ${theme === 'dark' ? 'text-text-light' : 'text-gray-700'}`}>
+              Terima kasih, lamaran Anda untuk posisi di <strong>{submittedCompanyName}</strong> telah berhasil kami terima.
+              <br /><br />
+              Silakan cek email Anda secara berkala untuk informasi lebih lanjut mengenai status lamaran Anda.
+            </p>
+            <div className="flex justify-center">
+              <button
+                onClick={handleCloseConfirmationModal}
+                className="bg-primary-blue hover:bg-light-blue text-white font-bold py-2 px-4 rounded-md transition-colors text-sm sm:text-base"
+              >
+                Kembali ke Daftar Lowongan
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -51,7 +51,7 @@ function Home() {
   }
 
   return (
-    <div className={`container mx-auto p-4 max-w-4xl animate-fade-in ${theme === 'dark' ? 'bg-dark-blue-bg' : 'bg-gray-100'}`}>
+    <div className={`container mx-auto mt-10 p-4 max-w-4xl animate-fade-in ${theme === 'dark' ? 'bg-dark-blue-bg' : 'bg-gray-100'}`}>
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl sm:text-4xl font-bold text-left text-primary-blue animate-fade-in-up flex-grow">
           Temukan Pekerjaan Impianmu
@@ -69,7 +69,7 @@ function Home() {
         </button>
       </div>
 
-      <div className="relative mb-8 w-full max-w-xl mx-auto animate-fade-in delay-200">
+      <div className="relative mb-8 w-full mx-auto animate-fade-in delay-200">
         <input
           type="text"
           placeholder="Cari lowongan (judul, perusahaan, lokasi, deskripsi...)"
