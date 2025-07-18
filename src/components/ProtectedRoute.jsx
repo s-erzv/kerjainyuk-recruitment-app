@@ -11,7 +11,7 @@ function ProtectedRoute({ children }) {
       const { data: { session }, error } = await supabase.auth.getSession();
 
       if (error || !session) {
-        navigate('/admin/login', { replace: true });
+        navigate('/admin', { replace: true });
       } else {
         setLoading(false);
       }
@@ -23,7 +23,7 @@ function ProtectedRoute({ children }) {
     const { data: authListener } = supabase.auth.onAuthStateChange(
       (event, session) => {
         if (!session) {
-          navigate('/admin/login', { replace: true });
+          navigate('/admin', { replace: true });
         } else {
           setLoading(false);
         }

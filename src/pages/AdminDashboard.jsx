@@ -27,6 +27,10 @@ function AdminDashboard() {
 
   const { theme, toggleTheme } = useTheme();
 
+  // === State baru untuk Modal Konfirmasi Download CV ===
+  const [showDownloadConfirmModal, setShowDownloadConfirmModal] = useState(false);
+  const [downloadedFileName, setDownloadedFileName] = useState('');
+
   useEffect(() => {
     fetchJobs();
   }, []);
@@ -78,7 +82,7 @@ function AdminDashboard() {
       console.error('Error logging out:', error.message);
       setError('Gagal logout. ' + error.message);
     } else {
-      navigate('/admin/login'); // Pastikan ini mengarah ke halaman login admin yang benar
+      navigate('/admin/login');
     }
   };
 
@@ -141,7 +145,7 @@ function AdminDashboard() {
   };
 
   const handleDeleteJob = async (jobId) => {
-    if (window.confirm('Anda yakin ingin menghapus lowongan ini dan semua lamarannya?')) {
+    if (window.confirm('Anda yakin ingin menghapus lowongan ini dan semua lamarannya? Tindakan ini tidak dapat dibatalkan.')) {
       setError(null);
       try {
         const { error: deleteJobError } = await supabase
@@ -194,6 +198,11 @@ function AdminDashboard() {
             link.click();
             link.remove();
             window.URL.revokeObjectURL(url);
+            
+            // === Tampilkan modal konfirmasi download berhasil ===
+            setDownloadedFileName(fileName);
+            setShowDownloadConfirmModal(true);
+
         } else {
             setError('Gagal mendownload CV: Data kosong.');
         }
@@ -203,6 +212,13 @@ function AdminDashboard() {
         setError('Gagal mendownload CV. ' + err.message);
     }
   };
+
+  // Fungsi untuk menutup modal konfirmasi download
+  const handleCloseDownloadConfirmModal = () => {
+    setShowDownloadConfirmModal(false);
+    setDownloadedFileName('');
+  };
+
 
   const filteredJobs = jobs.filter(job =>
     job.title.toLowerCase().includes(jobSearchTerm.toLowerCase()) ||
@@ -220,12 +236,48 @@ function AdminDashboard() {
 
   return (
     <div className={`container mx-auto mt-10 p-4 max-w-6xl animate-fade-in ${theme === 'dark' ? 'bg-dark-blue-bg' : 'bg-gray-100'}`}>
-      {/* Header dengan judul, tombol tema, dan tombol logout */}
-      <div className="flex flex-wrap justify-between items-center mb-8"> {/* flex-wrap untuk responsivitas */}
-        <h1 className="text-3xl sm:text-4xl font-bold text-primary-blue mb-4 sm:mb-0 flex-grow text-center sm:text-left order-1"> {/* order-1 untuk di mobile tetap di atas */}
-          Dashboard Admin
-        </h1>
-        <div className="flex items-center space-x-4 order-2 ml-auto sm:ml-0"> {/* order-2 dan ml-auto untuk posisikan di kanan di mobile */}
+      {/* Header Utama Dashboard Admin */}
+      <div className="flex justify-between items-center mb-8">
+        <h1 className="text-3xl sm:text-4xl font-bold text-primary-blue animate-slide-in-left">Dashboard Admin</h1>
+      </div>
+
+      {error && (
+        <div className="bg-red-500/20 border border-red-500 text-red-300 px-4 py-3 rounded relative mb-4 animate-fade-in" role="alert">
+          <strong className="font-bold">Error!</strong>
+          <span className="block sm:inline"> {error}</span>
+        </div>
+      )}
+
+      {/* Bagian Kontrol Atas: Tambah Lowongan, Search Lowongan, Logout, Toggle Tema */}
+      <div className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
+        {/* Tombol Tambah Lowongan */}
+        <button
+          onClick={openAddJobModal}
+          className="bg-accent-teal hover:bg-primary-blue text-white font-bold py-2 px-4 rounded-md transition-colors w-full sm:w-auto animate-fade-in-up"
+        >
+          Tambah Lowongan Baru
+        </button>
+        
+        {/* Search Bar Lowongan */}
+        <div className="relative w-full sm:w-1/2 md:w-1/3 animate-fade-in delay-200 order-last sm:order-none">
+            <input
+                type="text"
+                placeholder="Cari lowongan..."
+                className={`w-full py-2 pl-10 pr-4 rounded-full shadow-md focus:outline-none focus:ring-2 ${
+                    theme === 'dark'
+                    ? 'bg-mid-blue-bg text-text-light border border-light-blue focus:ring-primary-blue'
+                    : 'bg-white text-gray-800 border border-gray-300 focus:ring-indigo-500'
+                }`}
+                value={jobSearchTerm}
+                onChange={(e) => setJobSearchTerm(e.target.value)}
+            />
+            <div className={`absolute left-3 top-1/2 -translate-y-1/2 ${theme === 'dark' ? 'text-light-blue' : 'text-gray-500'}`}>
+                <MdSearch size={20} />
+            </div>
+        </div>
+
+        {/* Tombol Logout & Toggle Tema */}
+        <div className="flex items-center space-x-4 w-full sm:w-auto justify-center sm:justify-end">
             <button
                 onClick={toggleTheme}
                 className={`p-2 rounded-full transition-colors duration-300 ${
@@ -243,39 +295,6 @@ function AdminDashboard() {
             >
                 Logout
             </button>
-        </div>
-      </div>
-
-      {error && (
-        <div className="bg-red-500/20 border border-red-500 text-red-300 px-4 py-3 rounded relative mb-4 animate-fade-in" role="alert">
-          <strong className="font-bold">Error!</strong>
-          <span className="block sm:inline"> {error}</span>
-        </div>
-      )}
-
-      {/* Tombol Tambah Lowongan & Search Bar Lowongan */}
-      <div className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
-        <button
-          onClick={openAddJobModal}
-          className="bg-accent-teal hover:bg-primary-blue text-white font-bold py-2 px-4 rounded-md transition-colors w-full sm:w-auto animate-fade-in-up"
-        >
-          Tambah Lowongan Baru
-        </button>
-        <div className="relative w-full sm:w-1/2 md:w-1/3 animate-fade-in delay-200">
-            <input
-                type="text"
-                placeholder="Cari lowongan..."
-                className={`w-full py-2 pl-10 pr-4 rounded-full shadow-md focus:outline-none focus:ring-2 ${
-                    theme === 'dark'
-                    ? 'bg-mid-blue-bg text-text-light border border-light-blue focus:ring-primary-blue'
-                    : 'bg-white text-gray-800 border border-gray-300 focus:ring-indigo-500'
-                }`}
-                value={jobSearchTerm}
-                onChange={(e) => setJobSearchTerm(e.target.value)}
-            />
-            <div className={`absolute left-3 top-1/2 -translate-y-1/2 ${theme === 'dark' ? 'text-light-blue' : 'text-gray-500'}`}>
-                <MdSearch size={20} />
-            </div>
         </div>
       </div>
 
@@ -509,6 +528,32 @@ function AdminDashboard() {
       <footer className={`mt-12 text-center text-sm ${theme === 'dark' ? 'text-text-medium' : 'text-gray-500'}`}>
         <p>&copy; {new Date().getFullYear()} KERJAINYUK. Dashboard Admin.</p>
       </footer>
+
+      {/* Confirmation Modal for CV Download */}
+      {showDownloadConfirmModal && (
+        <div className="fixed inset-0 bg-dark-blue-bg bg-opacity-80 flex items-center justify-center p-4 z-50 animate-fade-in">
+          <div className={`rounded-lg shadow-xl p-8 w-full max-w-sm md:max-w-md border animate-zoom-in ${
+            theme === 'dark'
+              ? 'bg-mid-blue-bg border-light-blue'
+              : 'bg-white border-gray-200'
+          }`}>
+            <h2 className={`text-xl sm:text-2xl font-bold text-center mb-4 ${theme === 'dark' ? 'text-primary-blue' : 'text-indigo-700'}`}>
+              Download Berhasil!
+            </h2>
+            <p className={`text-base sm:text-lg text-center mb-6 ${theme === 'dark' ? 'text-text-light' : 'text-gray-700'}`}>
+              File CV <strong className="font-semibold text-primary-blue">{downloadedFileName}</strong> telah berhasil diunduh ke perangkat Anda.
+            </p>
+            <div className="flex justify-center">
+              <button
+                onClick={handleCloseDownloadConfirmModal}
+                className="bg-primary-blue hover:bg-light-blue text-white font-bold py-2 px-4 rounded-md transition-colors text-sm sm:text-base"
+              >
+                Tutup
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
