@@ -51,30 +51,25 @@ function Home() {
   }
 
   return (
-    <div className={`container mx-auto p-4 max-w-4xl mt-10 animate-fade-in ${theme === 'dark' ? 'bg-dark-blue-bg' : 'bg-gray-100'}`}>
-      {/* Container header: flex-row di semua ukuran layar */}
-      <div className="flex justify-between items-center mb-8"> {/* Hapus flex-col dan sm:flex-row */}
-        {/* H1: Tetap rata kiri, akan menyesuaikan lebar */}
-        <h1 className="text-3xl sm:text-4xl font-bold text-left text-primary-blue animate-fade-in-up flex-grow"> {/* Tambah flex-grow */}
+    <div className={`container mx-auto p-4 max-w-4xl animate-fade-in ${theme === 'dark' ? 'bg-dark-blue-bg' : 'bg-gray-100'}`}>
+      <div className="flex justify-between items-center mb-8">
+        <h1 className="text-3xl sm:text-4xl font-bold text-left text-primary-blue animate-fade-in-up flex-grow">
           Temukan Pekerjaan Impianmu
         </h1>
-        
-        {/* Tombol Tema: Sekarang akan sejajar karena parent-nya flex-row */}
         <button
           onClick={toggleTheme}
-          className={`p-2 rounded-full transition-colors duration-300 flex-shrink-0 ml-4 ${ // Tambah ml-4 untuk jarak
+          className={`p-2 rounded-full transition-colors duration-300 flex-shrink-0 ml-4 ${
             theme === 'dark'
               ? 'bg-mid-blue-bg text-text-light hover:bg-light-blue hover:text-white'
               : 'bg-gray-200 text-gray-800 hover:bg-gray-300'
           }`}
-          aria-label="Toggle Theme"
+          aria-label="Toggle Tema"
         >
           {theme === 'dark' ? <MdLightMode size={24} /> : <MdDarkMode size={24} />}
         </button>
       </div>
 
-      {/* Search Bar */}
-      <div className="relative mb-8 w-full mx-auto animate-fade-in delay-200">
+      <div className="relative mb-8 w-full max-w-xl mx-auto animate-fade-in delay-200">
         <input
           type="text"
           placeholder="Cari lowongan (judul, perusahaan, lokasi, deskripsi...)"
@@ -115,6 +110,10 @@ function Home() {
       </div>
       <footer className="mt-12 text-center text-text-medium text-sm">
         <p>&copy; {new Date().getFullYear()} KERJAINYUK.</p>
+        {/* Tambahkan link ke Admin Login di sini */}
+        <div className="mt-2">
+            <Link to="/admin" className="hover:text-primary-blue transition-colors duration-200">Admin Login</Link>
+        </div>
       </footer>
     </div>
   );
