@@ -112,7 +112,7 @@ function JobDetail() {
       setApplicantEmail('');
       setCvFile(null);
       // Hapus redirect otomatis di sini
-      // setTimeout(() => navigate('/jobs'), 5000); 
+      // setTimeout(() => navigate('/'), 5000); 
 
     } catch (err) {
       console.error('Error submitting application:', err.message);
@@ -124,7 +124,7 @@ function JobDetail() {
 
   const handleCloseConfirmationModal = () => {
     setShowConfirmationModal(false);
-    navigate('/jobs'); // Arahkan kembali ke daftar lowongan setelah menutup modal
+    navigate('/'); // Arahkan kembali ke daftar lowongan setelah menutup modal
   };
 
 
@@ -144,7 +144,7 @@ function JobDetail() {
     <div className={`container mx-auto p-4 max-w-4xl animate-fade-in ${theme === 'dark' ? 'bg-dark-blue-bg' : 'bg-gray-100'}`}>
       <div className="flex justify-between items-center mb-6">
         <button
-          onClick={() => navigate('/jobs')}
+          onClick={() => navigate('/')}
           className={`p-2 rounded-full transition-colors duration-300 ${
             theme === 'dark'
               ? 'bg-mid-blue-bg text-text-light hover:bg-light-blue hover:text-white'
