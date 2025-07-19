@@ -4,7 +4,7 @@
 
 /* Tambahkan gaya dasar untuk dark mode */
 body {
-  @apply font-sans bg-gray-100 text-text-dark; /* Default light mode */
+  @apply font-sans bg-light-bg-primary text-light-text-primary; /* Default LIGHT mode */
 }
 
 .dark body {

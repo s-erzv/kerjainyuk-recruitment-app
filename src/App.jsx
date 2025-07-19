@@ -1,6 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Home from './pages/Home'; // Ini akan jadi daftar lowongan
-import LandingPage from './pages/LandingPage'; // Halaman landing baru
+import LandingPage from './pages/LandingPage'; 
 import AdminDashboard from './pages/AdminDashboard';
 import JobDetail from './pages/JobDetail';
 import AdminLogin from './pages/AdminLogin';
@@ -10,8 +9,7 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<LandingPage />} /> {/* Halaman utama */}
-        <Route path="/jobs" element={<Home />} /> {/* Daftar lowongan */}
+        <Route path="/" element={<LandingPage />} /> 
         <Route path="/job/:id" element={<JobDetail />} />
         <Route path="/admin" element={<AdminLogin />} />
         <Route

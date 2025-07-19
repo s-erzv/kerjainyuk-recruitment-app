@@ -82,7 +82,7 @@ function AdminDashboard() {
       console.error('Error logging out:', error.message);
       setError('Gagal logout. ' + error.message);
     } else {
-      navigate('/admin/login');
+      navigate('/admin');
     }
   };
 
