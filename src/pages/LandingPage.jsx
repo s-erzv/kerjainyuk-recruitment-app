@@ -151,7 +151,7 @@ function LandingPage() {
                        focus:outline-none focus:ring-4 focus:ring-primary-blue focus:ring-opacity-50 text-xl 
                        ${heroEntry?.isIntersecting ? 'animate-fade-in-up delay-600' : 'opacity-0 translate-y-20'}`}
           >
-            Lihat Lowongan Sekarang
+            Upload CV/Lamaran
             <svg className="ml-2 -mr-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M10.293 15.707a1 1 0 010-1.414L14.586 10l-4.293-4.293a1 1 0 111.414-1.414l5 5a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0z" clipRule="evenodd"></path><path fillRule="evenodd" d="M4.293 15.707a1 1 0 010-1.414L8.586 10 4.293 5.707a1 1 0 011.414-1.414l5 5a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0z" clipRule="evenodd"></path></svg>
           </a>
         </div>
@@ -273,7 +273,7 @@ function LandingPage() {
                        focus:outline-none focus:ring-4 focus:ring-primary-blue focus:ring-opacity-50 text-xl 
                        ${ctaEntry?.isIntersecting ? 'animate-fade-in-up delay-400' : 'opacity-0 translate-y-20'}`}
           >
-            Lihat Semua Lowongan
+            Upload CV/Lamaran
             <svg className="ml-2 -mr-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M10.293 15.707a1 1 0 010-1.414L14.586 10l-4.293-4.293a1 1 0 111.414-1.414l5 5a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0z" clipRule="evenodd"></path><path fillRule="evenodd" d="M4.293 15.707a1 1 0 010-1.414L8.586 10 4.293 5.707a1 1 0 011.414-1.414l5 5a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0z" clipRule="evenodd"></path></svg>
           </a>
         </div>
