@@ -10,7 +10,7 @@ function App() {
       <Routes>
         <Route path="/" element={<LandingPage />} />
         {/* Rute /job/:id telah dihapus karena JobDetail.jsx dihapus */}
-        <Route path="/admin/login" element={<AdminLogin />} />
+        <Route path="/admin" element={<AdminLogin />} />
         <Route
           path="/admin/dashboard"
           element={
