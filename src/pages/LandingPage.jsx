@@ -315,7 +315,7 @@ function LandingPage() {
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
           <p className={`${theme === 'dark' ? 'text-text-medium' : 'text-light-text-secondary'}`}>&copy; {new Date().getFullYear()} KERJAINYUK</p>
           <div className="flex space-x-4">
-            <Link to="/admin/login" className={`hover:text-primary-blue transition-colors duration-200 ${theme === 'dark' ? 'text-text-medium' : 'text-light-text-secondary'}`}>Admin Login</Link>
+            <Link to="/admin" className={`hover:text-primary-blue transition-colors duration-200 ${theme === 'dark' ? 'text-text-medium' : 'text-light-text-secondary'}`}>Admin Login</Link>
           </div>
         </div>
       </footer>

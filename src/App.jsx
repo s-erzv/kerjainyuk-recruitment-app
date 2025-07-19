@@ -9,7 +9,6 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<LandingPage />} />
-        {/* Rute /job/:id telah dihapus karena JobDetail.jsx dihapus */}
         <Route path="/admin" element={<AdminLogin />} />
         <Route
           path="/admin/dashboard"
