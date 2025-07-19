@@ -176,7 +176,7 @@ function LandingPage() {
       </section>
 
       {/* Section Fitur/Why Choose Us */}
-      <section 
+      {/* <section 
         ref={featuresRef}
         className={`py-20 px-4 sm:px-6 lg:px-8 transition-opacity duration-1000 ${theme === 'dark' ? 'bg-mid-blue-bg' : 'bg-light-bg-card'} ${featuresEntry?.isIntersecting ? 'opacity-100' : 'opacity-0'}`}
       >
@@ -186,7 +186,7 @@ function LandingPage() {
             Kenapa Memilih Kami?
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <FeatureCard icon={<MdSearch />} title="Pencarian Mudah" description="Temukan lowongan yang sesuai dengan keahlian dan minat Anda dengan mudah." theme={theme} /> {/* Pass theme prop */}
+            <FeatureCard icon={<MdSearch />} title="Pencarian Mudah" description="Temukan lowongan yang sesuai dengan keahlian dan minat Anda dengan mudah." theme={theme} /> 
             <FeatureCard icon={<MdOutlineRateReview />} title="Proses Cepat" description="Kirim lamaran Anda dalam hitungan menit dan dapatkan respons lebih cepat." theme={theme} />
             <FeatureCard icon={<MdPeople />} title="Jaringan Luas" description="Akses ke berbagai perusahaan dan peluang kerja di berbagai industri." theme={theme} />
             <FeatureCard icon={<MdSecurity />} title="Keamanan Data" description="Data pribadi dan CV Anda aman bersama kami dengan enkripsi terbaik." theme={theme} />
@@ -194,7 +194,7 @@ function LandingPage() {
             <FeatureCard icon={<MdConnectWithoutContact />} title="Terhubung Langsung" description="Kami membantu Anda terhubung langsung dengan perekrut." theme={theme} />
           </div>
         </div>
-      </section>
+      </section> */}
       
       {/* --- BAGIAN DARI HOME.JSX YANG DIGABUNGKAN --- */}
       <section id="job-listings" 
